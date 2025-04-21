@@ -1,0 +1,83 @@
+<%- include('../header') %>
+
+    <!-- Form Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-8 mx-auto">
+                <div class="bg-secondary rounded p-4 shadow">
+                    <h3 class="text-light mb-4 text-center">
+                        <i class="bi bi-diagram-3-fill me-2 text-primary"></i>Add Sub Category
+                    </h3>
+
+                    <form method="post" action="/subCategory/add-subCategory" enctype="multipart/form-data">
+                        <!-- Sub Category Info -->
+                        <div class="mb-4 border-bottom pb-3">
+                            <h5 class="text-light mb-3">
+                                <i class="bi bi-info-circle-fill me-2"></i>Sub Category Information
+                            </h5>
+
+                            <!-- Category Dropdown -->
+                            <div class="mb-3">
+                                <label class="form-label text-light">Category Name</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text"><i
+                                            class="bi bi-collection-fill text-primary"></i></span>
+                                    <select class="form-select" name="category" required>
+                                        <option value="">Select Category</option>
+                                        <% categories.map((cat)=> { %>
+                                            <option value="<%= cat._id %>">
+                                                <%= cat.category %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Sub Category Name -->
+                            <div class="mb-3">
+                                <label class="form-label text-light">Sub Category Name</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text"><i class="bi bi-pencil-fill text-success"></i></span>
+                                    <input type="text" class="form-control" name="subCategory"
+                                        placeholder="Enter Sub Category Name" required>
+                                </div>
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="mb-3">
+                                <label class="form-label text-light">Sub Category Image</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text"><i class="bi bi-image-fill text-warning"></i></span>
+                                    <input type="file" class="form-control" name="subCategoryImage" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-success px-4 py-2 rounded-pill shadow">
+                                <i class="bi bi-node-plus-fill me-2"></i>Add Sub Category
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Run in a Node.js script or Mongo shell
+        const categories = await Category.find();
+        const names = new Set();
+
+        for (const cat of categories) {
+            if (names.has(cat.category.toLowerCase())) {
+                await Category.findByIdAndDelete(cat._id);
+            } else {
+                names.add(cat.category.toLowerCase());
+            }
+        }
+
+    </script>
+    <!-- Form End -->
+
+    <%- include('../footer') %>

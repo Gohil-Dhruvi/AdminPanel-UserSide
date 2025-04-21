@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Login - PinkTheme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #ffe6f0, #ffc0cb);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .login-box {
+      background: #fff0f5;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0px 0px 20px rgba(255, 20, 147, 0.3);
+      transition: 0.3s ease;
+    }
+    h3 {
+      color: #ff1493;
+      font-weight: bold;
+    }
+    .btn-pink {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      font-weight: 500;
+      font-size: 16px;
+    }
+    .btn-pink:hover {
+      background-color: #ff1493;
+    }
+    .form-floating label {
+      color: #ff69b4;
+    }
+    .form-control:focus {
+      border-color: #ff69b4;
+      box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+    }
+    a {
+      color: #ff1493;
+      font-weight: 500;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
+  <div class="login-box col-md-6">
+    <h3 class="text-center mb-4">Login</h3>
+
+    <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
+      <div class="alert alert-danger text-center">
+        <%= messages.error[0] %>
+      </div>
+    <% } %>
+
+    <form action="/user/loginUser" method="post">
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" name="email" placeholder="Email" required>
+        <label>Email</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
+        <label>Password</label>
+      </div>
+      <button type="submit" class="btn btn-pink w-100 py-2">Login</button>
+      <p class="text-center mt-3">Don't have an account? <a href="/user/register">Register</a></p>
+    </form>
+  </div>
+</div>
+
+
+</body>
+</html>

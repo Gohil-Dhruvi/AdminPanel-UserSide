@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>PinkPan - Sign Up</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Pink Theme -->
+    <style>
+        body {
+            background-color: #fce4ec;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .bg-secondary {
+            background-color: #f8bbd0 !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-primary {
+            color: #d81b60 !important;
+        }
+
+        .btn-primary {
+            background-color: #d81b60 !important;
+            border-color: #d81b60 !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #ad1457 !important;
+            border-color: #ad1457 !important;
+        }
+
+        .form-control {
+            border: 1px solid #f06292;
+            background-color: #fff0f5;
+        }
+
+        .form-control:focus {
+            border-color: #ec407a;
+            box-shadow: 0 0 0 0.2rem rgba(236, 64, 122, 0.25);
+        }
+
+        .form-check-input:checked {
+            background-color: #ec407a;
+            border-color: #ec407a;
+        }
+
+        a {
+            color: #c2185b;
+        }
+
+        a:hover {
+            color: #880e4f;
+        }
+
+        .form-label {
+            color: #6a1b9a;
+        }
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .signup-heading {
+            font-size: 24px;
+            font-weight: 700;
+            color: #6a1b9a;
+        }
+
+        ::placeholder {
+            color: #9e9e9e;
+        }
+
+        .rounded {
+            border-radius: 1rem !important;
+        }
+
+        .py-3 {
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid d-flex p-0">
+        <!-- Sign Up Start -->
+        <div class="container-fluid">
+            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                    <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a href="/" class="text-decoration-none">
+                                <h3 class="text-primary logo-title"><i class="fa fa-user-edit me-2"></i>Register</h3>
+                            </a>
+                        </div>
+                        <form action="/user/register" method="post">
+                            <div class="form-floating mb-3">
+                              <input type="text" name="username" class="form-control" id="floatingText" placeholder="jhondoe" required>
+                              <label for="floatingText">Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                              <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" required>
+                              <label for="floatingInput">Email address</label>
+                            </div>
+                            <div class="form-floating mb-4">
+                              <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password" required>
+                              <label for="floatingPassword">Password</label>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                              <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                              </div>
+                              <a href="/forgotPasswordUser">Forgot Password?</a>
+                            </div>
+                            <div class="text-end mb-3">
+                              <a href="/user/register"><button type="submit" class="btn btn-primary py-3 w-100">Sign Up</button></a>
+                            </div>
+                            <a href="/user/loginUser" class="text-decoration-none">Already have an account? Sign In</a>
+                          </form>                          
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sign Up End -->
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

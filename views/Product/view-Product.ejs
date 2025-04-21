@@ -1,0 +1,289 @@
+<%- include('../header') %>
+
+  <style>
+    /* General Button Styling */
+    .btn-category {
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-weight: 500;
+      transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    }
+
+    .btn-category:hover {
+      opacity: 0.9;
+      transform: scale(1.1);
+    }
+
+    /* Card Styling */
+    .card {
+      border: none;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      overflow: hidden;
+      background-color: #333;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .card:hover {
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+      object-position: top;
+      border-bottom: 2px solid #444;
+    }
+
+    .card-body {
+      background-color: #2a2a2a;
+      color: #f1f1f1;
+      border-radius: 0 0 15px 15px;
+      padding: 15px;
+    }
+
+    .card-body h5 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .card-body p {
+      font-size: 0.95rem;
+    }
+
+    .card-body .btn-sm {
+      border-radius: 20px;
+    }
+
+    .no-products {
+      font-size: 20px;
+      color: #ccc;
+      text-align: center;
+      padding: 50px;
+    }
+
+    /* Pagination Styling */
+    .pagination a {
+      min-width: 40px;
+      text-align: center;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .pagination a:hover {
+      background-color: #555;
+      color: #fff;
+    }
+
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .pagination .btn {
+      margin: 0 5px;
+    }
+
+    .pagination .btn-outline-light {
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    .pagination .btn-light {
+      background-color: #444;
+      color: #fff;
+    }
+
+    .pagination .btn-outline-primary {
+      color: #007bff;
+      border: 1px solid #007bff;
+    }
+
+    .pagination .btn-outline-light:hover {
+      background-color: #333;
+      border-color: #333;
+    }
+
+    .pagination .btn-light:hover {
+      background-color: #555;
+      border-color: #555;
+    }
+
+    /* Search Bar */
+    .search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .search-container .input-group {
+      max-width: 500px;
+    }
+
+    .input-group .form-control {
+      border-radius: 30px;
+      border: 1px solid #444;
+      transition: all 0.3s ease;
+    }
+
+    .input-group .form-control:focus {
+      border-color: #007bff;
+    }
+
+    .input-group button {
+      border-radius: 30px;
+      background-color: #007bff;
+      color: white;
+    }
+
+    .input-group button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Category Filter Buttons */
+    .btn-category {
+      transition: all 0.3s ease;
+    }
+
+    .btn-category:hover {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+
+    /* Extra Styling for Buttons */
+    .btn-success:hover {
+      background-color: #28a745;
+      border-color: #218838;
+    }
+
+    .btn-warning:hover {
+      background-color: #ffc107;
+      border-color: #e0a800;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc3545;
+      border-color: #c82333;
+    }
+
+    .btn-info:hover {
+      background-color: #17a2b8;
+      border-color: #138496;
+    }
+  </style>
+
+  <div class="container-fluid pt-4 px-4 min-vh-100">
+    <div class="row g-4">
+      <div class="col-12">
+        <div class="bg-dark rounded p-4 shadow">
+
+          <!-- Title and Add Product Button -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-white m-0">All Product Information</h3>
+            <a href="/Product/add-Product" class="btn btn-success rounded-pill shadow-sm">+ Add New Product</a>
+          </div>
+
+          <!-- Search Form -->
+          <div class="search-container">
+            <form method="get" action="/Product/view-Product" class="w-100">
+              <div class="input-group w-100">
+                <input type="text" name="search" class="form-control" placeholder="Search products..."
+                  value="<%= search || '' %>">
+                <% if (category) { %>
+                  <input type="hidden" name="category" value="<%= category %>">
+                  <% } %>
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+              </div>
+            </form>
+          </div>
+
+
+          <!-- Category Filter Buttons -->
+          <div class="text-center mb-4 flex-wrap d-flex justify-content-center">
+            <a class="btn btn-light btn-category mx-2 mb-2 <%= !category ? 'active' : '' %>"
+              href="/Product/view-Product?<%= search ? 'search=' + search : '' %>">All</a>
+
+            <% let colorClasses=['primary', 'danger' , 'success' , 'warning' , 'info' , 'secondary' , 'dark' ]; %>
+              <% categories.forEach((cat, i)=> { %>
+                <a href="/Product/view-Product?category=<%= cat._id %><%= search ? '&search=' + search : '' %>"
+                  class="btn btn-<%= colors[i % colors.length] %> btn-category mx-2 mb-2 <%= category == cat._id.toString() ? 'active' : '' %>">
+                  <%= cat.category %>
+                </a>
+                <% }); %>
+          </div>
+
+          <!-- Product Cards -->
+          <div class="row g-4">
+            <% if (allProducts && allProducts.length> 0) { %>
+              <% allProducts.forEach((product)=> { %>
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                  <div class="card h-100">
+                    <img src="<%= product.productImage || '/default-image.jpg' %>" class="card-img-top"
+                      alt="<%= product.productName || 'Product Image' %>">
+                    <div class="card-body d-flex flex-column">
+                      <h5 class="card-title text-white">
+                        <%= product.productName || product.title || 'Untitled' %>
+                      </h5>
+                      <p class="card-text">
+                        <%= product.description || (product.desc?.substring(0, 100) + '...' ) %>
+                      </p>
+                      <p class="mb-1"><strong>Price:</strong> ₹<%= product.price %>
+                      </p>
+                      <p class="mb-1"><strong>Category:</strong>
+                        <%= product.categoryId?.category || 'N/A' %>
+                      </p>
+                      <p class="mb-1"><strong>Subcategory:</strong>
+                        <%= product.subCategoryId?.subCategory || 'N/A' %>
+                      </p>
+                      <p class="mb-2"><strong>Extra Category:</strong>
+                        <%= product.extraCategoryId?.extraCategory || 'N/A' %>
+                      </p>
+
+                      <div class="mt-auto d-flex flex-wrap justify-content-between gap-1">
+                        <a href="/Product/edit-Product/<%= product._id %>" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="/Product/single-Product/<%= product._id %>" class="btn btn-info btn-sm">View
+                          Details</a>
+                        <a href="/Product/delete-Product/<%= product._id %>" class="btn btn-danger btn-sm"
+                          onclick="return confirm('Are you sure to delete this product?')">Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+                  <% } else { %>
+                    <div class="col-12">
+                      <div class="text-center no-products py-4">No product records found.</div>
+                    </div>
+                    <% } %>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-container">
+            <div class="d-flex justify-content-center mt-4 pagination">
+              <% if (currentPage> 1) { %>
+                <a href="/Product/view-Product?page=<%= currentPage - 1 %><%= search ? '&search=' + search : '' %><%= category ? '&category=' + category : '' %>"
+                  class="btn btn-outline-light mx-1">Prev</a>
+                <% } %>
+
+                  <% for (let i=1; i <=totalPages; i++) { %>
+                    <a href="/Product/view-Product?page=<%= i %><%= search ? '&search=' + search : '' %><%= category ? '&category=' + category : '' %>"
+                      class="btn <%= i === currentPage ? 'btn-light' : 'btn-outline-primary' %> mx-1">
+                      <%= i %>
+                    </a>
+                    <% } %>
+
+                      <% if (currentPage < totalPages) { %>
+                        <a href="/Product/view-Product?page=<%= currentPage + 1 %><%= search ? '&search=' + search : '' %><%= category ? '&category=' + category : '' %>"
+                          class="btn btn-outline-light mx-1">Next</a>
+                        <% } %>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../footer') %>

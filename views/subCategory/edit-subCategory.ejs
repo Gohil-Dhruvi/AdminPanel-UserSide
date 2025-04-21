@@ -1,0 +1,39 @@
+<%- include('../header') %>
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div class="col-12">
+      <div class="bg-secondary rounded p-4 shadow">
+        <h3 class="text-light mb-4">Edit Sub Category</h3>
+
+        <form method="post" action="/subCategory/update-subCategory/<%= subCategory._id %>" enctype="multipart/form-data">
+          
+          <!-- Category Dropdown -->
+          <div class="mb-3">
+            <label class="form-label text-light">Category Name</label>
+            <select class="form-select bg-dark text-light border-0" name="category" required>
+              <option disabled>Select Category</option>
+              <% categories.forEach((cat) => { %>
+                <option value="<%= cat._id %>" <%= cat._id.toString() === subCategory.category.toString() ? 'selected' : '' %>>
+                  <%= cat.category %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Sub Category Name -->
+          <div class="mb-3">
+            <label class="form-label text-light">Sub Category Name</label>
+            <input type="text" name="subCategory" class="form-control bg-dark text-light border-0" value="<%= subCategory.subCategory %>" required>
+          </div>
+
+          <!-- Buttons -->
+          <button type="submit" class="btn btn-success">Update Sub Category</button>
+          <a href="/subCategory/view-subCategory" class="btn btn-light">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../footer') %>

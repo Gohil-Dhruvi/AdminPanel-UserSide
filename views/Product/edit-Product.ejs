@@ -1,0 +1,117 @@
+<%- include('../header') %>
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div class="col-sm-12 col-xl-10 mx-auto">
+      <div class="bg-secondary rounded p-4 shadow">
+        <h3 class="text-light mb-4 text-center">
+          <i class="bi bi-pencil-square me-2 text-warning"></i>Edit Product
+        </h3>
+
+        <form action="/Product/update-Product/<%= product._id %>" method="post" enctype="multipart/form-data">
+
+          <!-- Product Name -->
+          <div class="mb-3">
+            <label for="productName" class="form-label text-light">
+              <i class="bi bi-tag-fill me-2 text-info"></i>Product Name
+            </label>
+            <input type="text" class="form-control shadow-sm rounded-3" id="productName" name="productName" value="<%= product.productName %>" required>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label text-light">
+              <i class="bi bi-card-text me-2 text-warning"></i>Description
+            </label>
+            <textarea class="form-control shadow-sm rounded-3" id="description" name="description" rows="3" required><%= product.description %></textarea>
+          </div>
+
+          <!-- Price -->
+          <div class="mb-3">
+            <label for="price" class="form-label text-light">
+              <i class="bi bi-currency-rupee me-2 text-success"></i>Price
+            </label>
+            <input type="number" class="form-control shadow-sm rounded-3" id="price" name="price" value="<%= product.price %>" required>
+          </div>
+
+          <!-- Gender -->
+          <div class="mb-3">
+            <label for="gender" class="form-label text-light">
+              <i class="bi bi-gender-ambiguous me-2 text-warning"></i>Gender
+            </label>
+            <select class="form-select shadow-sm rounded-3" id="gender" name="gender" required>
+              <option disabled>Select Gender</option>
+              <option value="Men" <%= product.gender === 'Men' ? 'selected' : '' %>>Men</option>
+              <option value="Women" <%= product.gender === 'Women' ? 'selected' : '' %>>Women</option>
+              <option value="Unisex" <%= product.gender === 'Unisex' ? 'selected' : '' %>>Unisex</option>
+            </select>
+          </div>
+
+          <!-- Category -->
+          <div class="mb-3">
+            <label for="categoryId" class="form-label text-light">
+              <i class="bi bi-list-ul me-2 text-primary"></i>Select Category
+            </label>
+            <select class="form-select shadow-sm rounded-3" name="categoryId" id="categoryId" required>
+              <option disabled selected>Select Category</option>
+              <% categories.forEach(category => { %>
+                <option value="<%= category._id %>" <%= category._id.toString() === product.categoryId?.toString() ? 'selected' : '' %>><%= category.category %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- SubCategory -->
+          <div class="mb-3">
+            <label for="subCategoryId" class="form-label text-light">
+              <i class="bi bi-diagram-3 me-2 text-warning"></i>Select Sub Category
+            </label>
+            <select class="form-select shadow-sm rounded-3" name="subCategoryId" id="subCategoryId" required>
+              <option disabled selected>Select Sub Category</option>
+              <% subCategories.forEach(sub => { %>
+                <option value="<%= sub._id %>" <%= sub._id.toString() === product.subCategoryId?.toString() ? 'selected' : '' %>><%= sub.subCategory %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Extra Category -->
+          <div class="mb-3">
+            <label for="extraCategoryId" class="form-label text-light">
+              <i class="bi bi-tags-fill me-2 text-success"></i>Select Extra Category
+            </label>
+            <select class="form-select shadow-sm rounded-3" name="extraCategoryId" id="extraCategoryId" required>
+              <option disabled selected>Select Extra Category</option>
+              <% extraCategories.forEach(extra => { %>
+                <option value="<%= extra._id %>" <%= extra._id.toString() === product.extraCategoryId?.toString() ? 'selected' : '' %>><%= extra.extraCategory %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Product Image -->
+          <div class="mb-3">
+            <label class="form-label text-light">Current Image</label><br>
+            <% if (product.productImage) { %>
+              <img src="<%= product.productImage %>" width="100" height="100" class="rounded shadow">
+            <% } else { %>
+              <p class="text-muted">No image available</p>
+            <% } %>
+          </div>
+
+          <!-- Upload New Image -->
+          <div class="mb-3">
+            <label class="form-label text-light">Change Image</label>
+            <input type="file" name="productImage" accept="image/*" id="productImage" class="form-control shadow-sm rounded-3">
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-success px-4 py-2 rounded-pill shadow">
+              <i class="bi bi-check-circle-fill me-2"></i>Update Product
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../footer') %>

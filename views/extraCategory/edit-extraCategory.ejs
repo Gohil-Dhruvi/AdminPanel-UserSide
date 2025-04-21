@@ -1,0 +1,85 @@
+<%- include('../header') %>
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div class="col-12">
+      <div class="bg-secondary rounded p-4 shadow">
+        <h3 class="text-light mb-4">Edit Extra Category</h3>
+
+        <form method="POST" action="/extraCategory/update-extraCategory/<%= extraCategory._id %>" enctype="multipart/form-data">
+          
+          <!-- Category Dropdown -->
+          <div class="mb-3">
+            <label class="form-label text-light">Category Name</label>
+            <select class="form-select bg-dark text-light border-0" name="categoryId" id="categoryDropdown" required>
+              <option value="">Select Category</option>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat._id %>" <%= cat._id.toString() === extraCategory.categoryId.toString() ? 'selected' : '' %>>
+                  <%= cat.category %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Sub Category Dropdown -->
+          <div class="mb-3">
+            <label class="form-label text-light">Sub Category Name</label>
+            <select class="form-select bg-dark text-light border-0" name="subCategoryId" id="subCategoryDropdown" required>
+              <option value="">Select Sub Category</option>
+              <% subCategories.forEach(sub => { %>
+                <option value="<%= sub._id %>" data-category-id="<%= sub.category.toString() %>" <%= sub._id.toString() === extraCategory.subCategoryId.toString() ? 'selected' : '' %>>
+                  <%= sub.subCategory %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Extra Category Name -->
+          <div class="mb-3">
+            <label class="form-label text-light">Extra Category Name</label>
+            <input type="text" name="extraCategory" class="form-control bg-dark text-light border-0" value="<%= extraCategory.extraCategory %>" required>
+          </div>
+
+          <!-- Current Image -->
+          <% if (extraCategory.extraCategoryImage) { %>
+            <div class="mb-3">
+              <label class="form-label text-light">Current Image</label><br>
+              <img src="<%= extraCategory.extraCategoryImage %>" height="100" width="100" class="rounded shadow">
+            </div>
+          <% } %>
+
+          <!-- Upload New Image -->
+          <div class="mb-3">
+            <label class="form-label text-light">Change Image</label>
+            <input type="file" name="extraCategoryImage" class="form-control bg-dark text-light border-0">
+          </div>
+
+          <!-- Buttons -->
+          <button type="submit" class="btn btn-success">Update Extra Category</button>
+          <a href="/extraCategory/view-extraCategory" class="btn btn-light">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Subcategories Script -->
+<script>
+  document.getElementById("categoryDropdown").addEventListener("change", function () {
+    const selectedCategoryId = this.value;
+    const subCategoryOptions = document.querySelectorAll("#subCategoryDropdown option");
+
+    subCategoryOptions.forEach(option => {
+      if (!option.value) return;
+      const categoryId = option.getAttribute("data-category-id");
+      option.style.display = categoryId === selectedCategoryId ? "block" : "none";
+    });
+
+    document.getElementById("subCategoryDropdown").value = "";
+  });
+
+  // Trigger filtering on page load
+  document.getElementById("categoryDropdown").dispatchEvent(new Event("change"));
+</script>
+
+<%- include('../footer') %>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= product.productName %> - Details</title>
+  <style>
+    body {
+      background-color: #fff0f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .product-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 1200px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 25px rgba(255, 105, 180, 0.1);
+      transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .product-container:hover {
+      box-shadow: 0 20px 35px rgba(255, 105, 180, 0.2);
+    }
+
+    .product-image {
+      flex: 1;
+      padding: 15px;
+      border-right: 2px solid #f8c8dc;
+    }
+
+    .product-image img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid #f4a7c1;
+    }
+
+    .product-details {
+      flex: 2;
+      padding: 20px 30px;
+      color: #5e0035;
+    }
+
+    .product-details h2 {
+      font-size: 30px;
+      color: #d81b60;
+      margin-bottom: 15px;
+    }
+
+    .product-details p {
+      font-size: 16px;
+      color: #7c4d64;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .price {
+      font-size: 28px;
+      color: #c2185b;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .price small {
+      color: #f48fb1;
+      text-decoration: line-through;
+      margin-left: 15px;
+      font-weight: normal;
+    }
+
+    .info-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .info-badges span {
+      display: inline-block;
+      background-color: #fde0ec;
+      color: #d81b60;
+      font-size: 14px;
+      margin: 4px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .info-badges span:hover {
+      background-color: #f8bbd0;
+    }
+
+    .btns {
+      margin-top: 25px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .btns a, .add-to-cart {
+      text-decoration: none;
+      color: white;
+      background: #d81b60;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+    }
+
+    .btns a:hover {
+      background: #ad1457;
+    }
+
+    .add-to-cart {
+      background: #ec407a;
+      border: none;
+      cursor: pointer;
+    }
+
+    .add-to-cart:hover {
+      background: #c2185b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="product-container">
+    <div class="product-image">
+      <img src="<%= product.productImage %>" alt="Product Image">
+    </div>
+
+    <div class="product-details">
+      <h2><%= product.productName %></h2>
+      <p><%= product.description %></p>
+
+      <div class="price">
+        ₹<%= (product.price - product.discount).toFixed(2) %>
+        <% if (product.discount > 0) { %>
+          <small>₹<%= product.price.toFixed(2) %></small>
+        <% } %>
+      </div>
+
+      <div class="info-badges">
+        <span>Category: <%= product.categoryId?.category || 'N/A' %></span>
+        <span>SubCategory: <%= product.subCategoryId?.subCategory || 'N/A' %></span>
+        <span>ExtraCategory: <%= product.extraCategoryId?.extraCategory || 'N/A' %></span>
+        <span>Stock: <%= product.stock %></span>
+        <span>Rating: <%= product.rating %> ⭐</span>
+        <span>Gender: <%= product.gender %></span>
+
+        <% product.sizes.forEach(size => { %>
+          <span>Size: <%= size %></span>
+        <% }) %>
+
+        <% product.colors.forEach(color => { %>
+          <span>Color: <%= color %></span>
+        <% }) %>
+      </div>
+
+      <div class="btns">
+        <form action="/user/add-to-cart" method="post">
+          <input type="hidden" name="productId" value="<%= product._id %>">
+          <input type="hidden" name="productName" value="<%= product.productName %>">
+          <input type="hidden" name="productPrice" value="<%= product.price %>">
+          <input type="hidden" name="productImage" value="<%= product.productImage %>">
+          <input type="hidden" name="discount" value="<%= product.discount %>">
+          <button type="submit" class="add-to-cart">Add to Cart</button>
+        </form>
+
+        <a href="/user">← Back to List</a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

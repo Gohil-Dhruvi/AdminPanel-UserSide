@@ -1,0 +1,104 @@
+<%- include('../header') %>
+
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-8 mx-auto">
+                <div class="bg-secondary rounded p-4 shadow">
+
+                    <h3 class="text-light mb-4 text-center">
+                        <i class="bi bi-node-plus-fill text-success me-2"></i>Add Extra Category
+                    </h3>
+
+                    <form method="POST" action="/extraCategory/add-extraCategory" enctype="multipart/form-data">
+                        <div class="mb-4 border-bottom pb-3">
+                            <h5 class="text-light mb-3">
+                                <i class="bi bi-info-circle-fill me-2 text-warning"></i>Extra Category Information
+                            </h5>
+
+                            <!-- Category Name -->
+                            <div class="mb-3">
+                                <label class="form-label text-light">Category Name</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text"><i class="bi bi-folder-fill text-primary"></i></span>
+                                    <select class="form-select" name="categoryId" id="categoryDropdown" required>
+                                        <option value="">Select Category</option>
+                                        <% categories.forEach(cat=> { %>
+                                            <option value="<%= cat._id %>">
+                                                <%= cat.category %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Sub Category Name -->
+                            <div class="mb-3">
+                                <label class="form-label text-light">Sub Category Name</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text"><i class="bi bi-diagram-3-fill text-info"></i></span>
+                                    <select class="form-select" name="subCategoryId" id="subCategoryDropdown" required>
+                                        <option value="">Select Sub Category</option>
+                                        <% subCategories.forEach(sub=> { %>
+                                            <option value="<%= sub._id %>"
+                                                data-category-id="<%= sub.category.toString() %>">
+                                                <%= sub.subCategory %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <!-- Extra Category Name -->
+                            <div class="mb-3">
+                                <label class="form-label text-light">Extra Category Name</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text"><i class="bi bi-pencil-fill text-success"></i></span>
+                                    <input type="text" class="form-control" name="extraCategory" required
+                                        placeholder="Enter Extra Category Name">
+                                </div>
+                            </div>
+
+                            <!-- Upload Image -->
+                            <div class="mb-3">
+                                <label class="form-label text-light">Upload Image</label>
+                                <div class="input-group shadow-sm rounded-3">
+                                    <span class="input-group-text"><i
+                                            class="bi bi-file-earmark-image-fill text-danger"></i></span>
+                                    <input type="file" class="form-control" name="extraCategoryImage">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow">
+                                <i class="bi bi-plus-circle-fill me-2"></i>Add Extra Category
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("categoryDropdown").addEventListener("change", function () {
+          const selectedCategoryId = this.value;
+          const subCategoryOptions = document.querySelectorAll("#subCategoryDropdown option");
+      
+          subCategoryOptions.forEach(option => {
+            if (!option.value) return;
+      
+            const categoryId = option.getAttribute("data-category-id");
+            if (categoryId === selectedCategoryId) {
+              option.style.display = "block";
+            } else {
+              option.style.display = "none";
+            }
+          });
+      
+          document.getElementById("subCategoryDropdown").value = "";
+        });
+      </script>
+      
+    <%- include('../footer') %>
