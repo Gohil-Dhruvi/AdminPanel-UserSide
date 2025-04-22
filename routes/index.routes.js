@@ -14,7 +14,11 @@ routes.get("/", loginPage);
 routes.get("/dashboard", passport.checkAuthenticated, dashBoard);
 
 // Admin Login
-routes.post("/login", passport.authenticate('local', { failureRedirect: "/" }), loginAdmin);
+routes.post("/login", passport.authenticate('local', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/',
+    failureFlash: true
+}), loginAdmin);
 routes.get("/logout", logout);
 routes.get("/profile", passport.checkAuthenticated, profilePage);
 

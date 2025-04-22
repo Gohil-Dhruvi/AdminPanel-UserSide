@@ -59,9 +59,4 @@ routes.get("/user/view-profile", passport.checkUserAuthenticated, viewProfile);
 routes.get("/changeUserPassword", passport.checkUserAuthenticated, changeUserPasswordPage); 
 routes.post("/changeUserPassword", passport.checkUserAuthenticated, changeUserPassword); 
 
-// routes.get("/favourite/add/:id", userController.addToFavourites);
-// routes.get("/favourite/view", userController.viewFavourites);
-// routes.get("/favourite/remove/:id", userController.removeFromFavourites);
-
-
 module.exports = routes;

@@ -74,25 +74,26 @@ exports.singleProduct = async (req, res) => {
   }
 };
 
-// Render View Profile Page
+// Render View Profile Page (for user side using Passport)
 exports.viewProfile = async (req, res) => {
   try {
-    if (!req.session.user) {
-      return res.redirect('/user');
+    if (!req.user) {
+      return res.redirect('/user/login'); // Redirect if not authenticated
     }
 
-    const user = await User.findById(req.session.user._id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
-      return res.redirect('/user');
+      return res.redirect('/user/login');
     }
 
-    res.render('user/viewProfile', { user });
-  } catch (err) {
-    console.error('Error in viewProfile:', err);
-    res.status(500).send('Internal Server Error');
+    return res.render('user/viewProfile', { user });
+  } catch (error) {
+    console.error('Error in viewProfile:', error);
+    return res.redirect('/user/login');
   }
 };
+
 
 
 // Render Register Page
@@ -293,7 +294,7 @@ exports.showAddProductPage = async (req, res) => {
       .populate("subCategoryId")
       .populate("extraCategoryId");
 
-    res.render("/add", { product });
+    res.render("cart/add", { product }); // Corrected path
   } catch (err) {
     console.log("Show Product Error:", err);
     res.redirect("/user");
@@ -326,7 +327,7 @@ exports.addToCart = async (req, res) => {
       });
     }
 
-    res.redirect("/view");
+    res.redirect("/cart/view"); // Correct redirect
   } catch (err) {
     console.log("Cart Add Error:", err);
     res.redirect("/user");
@@ -345,7 +346,7 @@ exports.viewCart = (req, res) => {
 
     const grandTotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
-    res.render("view", { cartItems, grandTotal });
+    res.render("cart/view", { cartItems, grandTotal }); // Corrected path
   } catch (err) {
     console.log("Cart View Error:", err);
     res.redirect("/user");
@@ -359,12 +360,13 @@ exports.removeFromCart = (req, res) => {
     if (req.session.cart) {
       req.session.cart = req.session.cart.filter(item => item.productId !== id);
     }
-    res.redirect("view");
+    res.redirect("/cart/view"); // Fixed path
   } catch (err) {
     console.log("Cart Remove Error:", err);
     res.redirect("/user");
   }
 };
+
 
 // Add to Favourites
 exports.addToFavourites = async (req, res) => {

@@ -14,7 +14,6 @@ const app = express();
 // middleware setup
 app.set("view engine", "ejs");
 app.use("/", express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
@@ -38,12 +37,10 @@ app.use(flash());
 app.use(flashConnect.setFlash);
 
 // Passport User Authentication Middleware (make sure these are functions)
-app.use(passport.setAuthenticateUser); // Make sure `setAuthenticateUser` is defined correctly in passport.js
-app.use(passport.setAuthenticateUser);
+app.use(passport.setAuthenticateUser); 
 
 // Routes
 app.use("/", require('./routes/index.routes'));
-app.use("/user", require('./routes/user.routes'));
 
 // Server start
 app.listen(port, () => {
