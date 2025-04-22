@@ -51,6 +51,9 @@
             <nav class="navbar bg-secondary navbar-dark">
                 <a href="/" class="navbar-brand mx-4 mb-3">
                     <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DarkPan</h3>
+
+
+
                     <% if (locals.error && locals.error.length> 0) { %>
                         <div class="alert alert-danger">
                             <%= locals.error %>
@@ -63,6 +66,8 @@
                                 </div>
                                 <% } %>
 
+
+
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -74,10 +79,12 @@
                     </div>
                     <div class="ms-3">
                         <h6 class="mb-0">
+
+
                             <% if (user && user.firstname && user.lastname) { %>
                                 <%= user.firstname %>
                                     <%= user.lastname %>
-                                            <% } %>
+                                        <% } %>
                         </h6>
                         <span>Admin</span>
                     </div>
@@ -260,12 +267,14 @@
                             <img class="rounded-circle me-lg-2" src="/img/user.jpg" alt="User Image"
                                 style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #fff;">
 
-                                <span class="d-none d-lg-inline-flex">
-                                    <% if (admin && admin.firstname && admin.lastname) { %>
-                                        <%= admin.firstname + ' ' + admin.lastname %>
-                                    <% } %>
-                                </span>
-                                
+                            <span class="d-none d-lg-inline-flex">
+
+                                <% if (user && user.firstname && user.lastname) { %>
+                                    <%= user.firstname %>
+                                        <%= user.lastname %>
+                                            <% } %>
+                            </span>
+
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="/changepassword" class="dropdown-item">Chnage Password</a>

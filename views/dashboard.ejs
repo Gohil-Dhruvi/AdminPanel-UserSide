@@ -101,6 +101,9 @@
                                             <% } else { %>
                                                 Guest
                                                 <% } %>
+                                                <% if(locals.flash.success && locals.flash.success.length > 0) { %>
+                                                    <div class="alert alert-success"><%= locals.flash.success %></div>
+                                                <% } %>
                             </td>
                             <td>$123</td>
                             <td>Paid</td>

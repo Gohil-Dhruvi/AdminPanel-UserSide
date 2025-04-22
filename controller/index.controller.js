@@ -21,14 +21,11 @@ exports.loginPage = async (req, res) => {
     return res.render("login");
 };
 
-// Dashboard
-exports.dashBoard = async (req, res) => {
+// Login Admin
+exports.loginAdmin = async (req, res) => {
     try {
-        if (!req.isAuthenticated()) {
         req.flash("success", "Login Success");
-            return res.redirect("/");
-        }
-        return res.render("dashboard", { admin: req.user });
+        return res.redirect("/dashboard");
     } catch (error) {
         console.log(error);
         req.flash("success", "Login Success");
@@ -36,11 +33,14 @@ exports.dashBoard = async (req, res) => {
     }
 };
 
-// Login Admin
-exports.loginAdmin = async (req, res) => {
+// Dashboard
+exports.dashBoard = async (req, res) => {
     try {
-        req.flash("success", "Login Success");
-        return res.redirect("/dashboard");
+        if (!req.isAuthenticated()) {
+            req.flash("success", "Login Success");
+            return res.redirect("/");
+        }
+        return res.render("dashboard", { admin: req.user });
     } catch (error) {
         console.log(error);
         req.flash("success", "Login Success");
@@ -166,18 +166,18 @@ exports.changePassword = async (req, res) => {
 exports.profilePage = async (req, res) => {
     try {
         if (!req.user) {
-            return res.redirect("/");
+            return res.redirect("/"); 
         }
 
         const admin = await Admin.findById(req.user._id);
 
         if (!admin) {
-            return res.redirect("/");
+            return res.redirect("/"); 
         }
-        
+
         return res.render("profile", { admin });
     } catch (error) {
         console.log(error);
-        return res.redirect("/");
+        return res.redirect("/"); 
     }
 };

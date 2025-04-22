@@ -13,7 +13,7 @@
                 </div>
 
                 <!-- Table Start -->
-                <div class="table-responsive ">
+                <div class="table-responsive">
                     <table class="table table-striped table-dark table-bordered align-middle text-center">
                         <thead class="text-light">
                             <tr>
@@ -29,7 +29,7 @@
                         </thead>
                         <tbody>
                             <% if (admins.length > 0) { %>
-                                <% admins.map((admin, i) => { %>
+                                <% admins.forEach((admin, i) => { %>
                                     <tr>
                                         <td><%= i + 1 %></td>
                                         <td><%= admin.firstname %></td>
