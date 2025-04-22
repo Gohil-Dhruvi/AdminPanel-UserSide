@@ -26,12 +26,8 @@
     <div class="col-md-6">
       <div class="card p-4">
         <h2 class="text-center mb-4">Verify OTP</h2>
-        <% if (locals.error) { %>
-          <div class="alert alert-danger"><%= error %></div>
-        <% } %>
-        <% if (locals.success) { %>
-          <div class="alert alert-success"><%= success %></div>
-        <% } %>
+        <% if (error) { %><div class="alert alert-danger"><%= error %></div><% } %>
+        <% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
         <form action="/forgotPasswordUser/verifyUserotp" method="POST">
           <div class="mb-3">
             <label>Enter OTP</label>

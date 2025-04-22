@@ -2,78 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Login - PinkTheme</title>
+  <title>Sign In - PinkTheme</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
     body {
       background: linear-gradient(to right, #ffe6f0, #ffc0cb);
       font-family: 'Segoe UI', sans-serif;
     }
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     .login-box {
-      background: #fff0f5;
+      background-color: #fff;
       padding: 40px;
       border-radius: 20px;
-      box-shadow: 0px 0px 20px rgba(255, 20, 147, 0.3);
-      transition: 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.2);
+      width: 100%;
+      max-width: 420px;
     }
-    h3 {
-      color: #ff1493;
-      font-weight: bold;
+    .login-box h2 {
+      text-align: center;
+      color: #d63384;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+    .form-control {
+      border-radius: 10px;
+      border: 2px solid #ffc0cb;
+    }
+    .form-control:focus {
+      border-color: #ff69b4;
+      box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.3);
     }
     .btn-pink {
       background-color: #ff69b4;
       color: white;
-      border: none;
       font-weight: 500;
-      font-size: 16px;
+      border-radius: 25px;
+      transition: 0.3s;
     }
     .btn-pink:hover {
       background-color: #ff1493;
     }
-    .form-floating label {
-      color: #ff69b4;
-    }
-    .form-control:focus {
-      border-color: #ff69b4;
-      box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
-    }
-    a {
-      color: #ff1493;
+    .google-btn {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: 500;
+      margin-bottom: 20px;
+      padding: 10px;
+      color: #333;
+      transition: 0.3s;
     }
-    a:hover {
-      text-decoration: underline;
+    .google-btn:hover {
+      background-color: #f8f8f8;
+    }
+    .google-btn i {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+    .forgot-link {
+      float: right;
+    }
+    .footer-text {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .footer-text a {
+      color: #d63384;
     }
   </style>
 </head>
 <body>
+  
+  <div class="login-container">
+    <div class="login-box">
 
-  <div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
-  <div class="login-box col-md-6">
-    <h3 class="text-center mb-4">Login</h3>
+      <h2>Sign in to Dribbble</h2>
 
-    <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
-      <div class="alert alert-danger text-center">
-        <%= messages.error[0] %>
-      </div>
-    <% } %>
+      <% if (typeof messages !== 'undefined' && messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger text-center">
+          <%= messages.error[0] %>
+        </div>
+      <% } %>
 
-    <form action="/user/loginUser" method="post">
-      <div class="form-floating mb-3">
-        <input type="email" class="form-control" name="email" placeholder="Email" required>
-        <label>Email</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="password" class="form-control" name="password" placeholder="Password" required>
-        <label>Password</label>
-      </div>
-      <button type="submit" class="btn btn-pink w-100 py-2">Login</button>
-      <p class="text-center mt-3">Don't have an account? <a href="/user/register">Register</a></p>
-    </form>
+      <!-- Google Sign-In Button -->
+      <a href="#" class="google-btn">
+        <i class="fab fa-google"></i> Sign in with Google
+      </a>
+
+      <div class="text-center my-3 text-muted">or sign in with email</div>
+
+      <form action="/user/loginUser" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Username or Email</label>
+          <input type="email" class="form-control" name="email" required placeholder="Enter your email">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label d-flex justify-content-between">
+            <span>Password</span>
+            <a href="/user/forgot-password" class="forgot-link">Forgot?</a>
+          </label>
+          <input type="password" class="form-control" name="password" required placeholder="Enter your password">
+        </div>
+
+        <button type="submit" class="btn btn-pink w-100 py-2 mt-2">Sign In</button>
+      </form>
+
+      <p class="footer-text mt-4">Don't have an account? <a href="/user/register">Sign up</a></p>
+    </div>
   </div>
-</div>
-
-
 </body>
 </html>

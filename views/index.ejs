@@ -347,11 +347,30 @@
       </form>
 
       <div class="nav-links d-flex align-items-center">
-        <a href="/user/loginUser"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
-        <a href="/user/register"><i class="fas fa-user-plus me-1"></i>Register</a>
 
-        <a href="/user/favourite"><i class="fas fa-heart me-1"></i>Favourites</a>
-        <a href="/user/cart/add"><i class="fas fa-shopping-cart me-1"></i>Cart</a>
+        <!-- Login -->
+        <a href="/user/loginUser"
+          class="btn btn-outline-light text-pink fw-bold me-2 border border-pink rounded-pill px-3">
+          <i class="fas fa-sign-in-alt me-1"></i> Login
+        </a>
+
+        <!-- Register -->
+        <a href="/user/register"
+          class="btn btn-outline-light text-pink fw-bold me-2 border border-pink rounded-pill px-3">
+          <i class="fas fa-user-plus me-1"></i> Register
+        </a>
+
+
+        <!-- Favourites -->
+        <a href="/user/favourite" class="btn btn-pink me-2">
+          <i class="fas fa-heart me-1"></i> Favourites
+        </a>
+
+        <!-- Cart -->
+        <a href="/user/cart" class="btn btn-pink">
+          <i class="fas fa-shopping-cart me-1"></i> Cart
+        </a>
+
 
         <!-- Profile Dropdown -->
         <div class="dropdown ms-3">
@@ -360,14 +379,17 @@
             <i class="fas fa-user me-1"></i> Profile
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-            <li><a class="dropdown-item" href="/user/viewProfile"><i class="fas fa-user-circle me-2"></i>My Profile</a>
-            </li>
-            <li><a class="dropdown-item" href="/changepassword"><i class="fas fa-key me-2"></i>Change Password</a></li>
-            <li>
+            <li><a class="dropdown-item" href="/user/view-profile"><i class="fas fa-user-circle me-2"></i>My Profile</a></li>
+<li><a class="dropdown-item" href="/user/change-password"><i class="fas fa-key me-2"></i>Change Password</a></li>
+
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item text-danger" href="/user/logoutUser"><i class="fas fa-sign-out-alt me-2"></i>Log Out</a>
+            <li>
+              <a class="dropdown-item text-danger" href="/user/logoutUser">
+                <i class="fas fa-sign-out-alt me-2"></i> Log Out
+              </a>
             </li>
+
           </ul>
         </div>
       </div>

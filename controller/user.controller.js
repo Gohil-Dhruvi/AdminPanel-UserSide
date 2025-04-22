@@ -2,6 +2,7 @@ const Category = require("../model/category.model");
 const Product = require("../model/product.model");
 const User = require("../model/user.model");
 const passport = require("passport");
+const { sendMail } = require("../config/mailer");
 
 
 // Render Homepage with Filter, Search, Pagination
@@ -74,35 +75,13 @@ exports.singleProduct = async (req, res) => {
   }
 };
 
-// Render View Profile Page (for user side using Passport)
-exports.viewProfile = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.redirect('/user/login'); // Redirect if not authenticated
-    }
-
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      return res.redirect('/user/login');
-    }
-
-    return res.render('user/viewProfile', { user });
-  } catch (error) {
-    console.error('Error in viewProfile:', error);
-    return res.redirect('/user/login');
-  }
-};
-
-
-
 // Render Register Page
 exports.registerPage = (req, res) => {
   try {
     res.render("register");
   } catch (error) {
     console.log(error);
-    res.redirect("/");
+    res.redirect("/");  // Redirect to home if there's an error
   }
 };
 
@@ -113,30 +92,28 @@ exports.handleRegister = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.send("User already exists with this email.");
+      return res.render("register", { error: "User already exists with this email." });  // Send back error message
     }
 
     const newUser = new User({ username, email, password });
+
     await newUser.save();
 
-    res.redirect("register");
+    res.redirect("/user/loginUser");
   } catch (error) {
     console.error("Registration Error:", error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-
-// Render Login Page
 exports.loginPage = (req, res) => {
   try {
-    res.render("loginUser"); 
     if (req.isAuthenticated()) {
-      return res.redirect("/user");  // Already logged in
-  }
-  res.render("loginUser");  // Your pink theme login view
+      return res.redirect("/user");
+    }
+    res.render("loginUser");
   } catch (error) {
-    console.log(error);
+    console.log("Login page error:", error);
     res.redirect("/");
   }
 };
@@ -150,25 +127,41 @@ exports.handleLogin = (req, res, next) => {
 
     if (!user) {
       req.flash("error", "Invalid email or password");
-      return res.redirect("/user/loginUser"); // ✅ Correct path to login page
+      return res.redirect("/loginUser");
     }
 
     req.logIn(user, (err) => {
       if (err) {
-        console.error("Login session error:", err);
-        return res.status(500).send("Session Error");
+        console.error("Session login error:", err);
+        return res.status(500).send("Login Session Error");
       }
 
-      req.session.user = user; // ✅ Save user in session
-      return res.redirect("/user"); // ✅ Make sure this route exists
+      req.session.user = user;
+      res.redirect("/user");
     });
   })(req, res, next);
 };
 
+exports.viewProfile = async (req, res) => {
+  try {
+    if (!req.user) return res.redirect('/loginUser');
 
+    const user = await User.findById(req.user._id);
+    if (!user) return res.redirect('/loginUser');
+
+    return res.render('/view-profile', { user });
+
+  } catch (error) {
+    console.error('Error in viewProfile:', error);
+    res.redirect('/loginUser');
+  }
+};
 
 exports.changeUserPasswordPage = (req, res) => {
-  res.render("user/changePasswordUser");
+  res.render('/changePasswordUser', {
+    success: req.flash('success'),
+    error: req.flash('error'),
+  });
 };
 
 exports.changeUserPassword = async (req, res) => {
@@ -177,39 +170,43 @@ exports.changeUserPassword = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
-      req.flash("error", "User not found.");
-      return res.redirect("back");
+      req.flash('error', 'User not found.');
+      return res.redirect('back');
     }
 
     if (currentPass !== user.password) {
-      req.flash("error", "Current password is incorrect.");
-      return res.redirect("back");
+      req.flash('error', 'Current password is incorrect.');
+      return res.redirect('back');
     }
 
     if (newpass !== confpass) {
-      req.flash("error", "Passwords do not match.");
-      return res.redirect("back");
+      req.flash('error', 'Passwords do not match.');
+      return res.redirect('back');
     }
 
     if (currentPass === newpass) {
-      req.flash("error", "New password must be different.");
-      return res.redirect("back");
+      req.flash('error', 'New password must be different.');
+      return res.redirect('back');
     }
 
     user.password = newpass;
     await user.save();
 
-    req.flash("success", "Password changed successfully.");
-    res.redirect("/user");
+    req.flash('success', 'Password changed successfully.');
+    res.redirect('/view-profile');
   } catch (error) {
-    console.log("Change password error:", error);
-    req.flash("error", "Something went wrong.");
-    res.redirect("back");
+    console.error('Change password error:', error);
+    req.flash('error', 'Something went wrong.');
+    res.redirect('back');
   }
 };
 
+
 exports.forgotUserPasswordPage = (req, res) => {
-  res.render("forgotPasswordUser/forgotPasswordUser");
+  res.render("forgotPasswordUser/forgotPasswordUser", {
+    error: req.flash("error"),
+    success: req.flash("success")
+  });
 };
 
 exports.sendUserResetEmail = async (req, res) => {
@@ -219,32 +216,40 @@ exports.sendUserResetEmail = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       req.flash("error", "No user found with this email.");
-      return res.redirect("back");
+      return res.redirect("/user/forgot-password");
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     req.session.otp = otp;
     req.session.userEmail = email;
 
-    console.log("OTP for reset:", otp);
-    req.flash("success", "OTP sent to email.");
-    res.redirect("/user/Userverify-otp");
+    await sendMail(email, otp);
+    req.flash("success", "OTP sent to your email.");
+    res.render("forgotPasswordUser/verifyOtpUser", {
+      error: null,
+      success: req.flash("success")
+    });
   } catch (error) {
     console.log(error);
     req.flash("error", "Failed to send OTP.");
-    res.redirect("back");
+    res.redirect("/user/forgot-password");
   }
 };
 
 exports.UserverifyOTP = (req, res) => {
   const { otp } = req.body;
-
   if (otp === req.session.otp) {
     req.flash("success", "OTP verified.");
-    res.render("forgotPasswordUser/resetPasswordUser");
+    res.render("forgotPasswordUser/resetPasswordUser", {
+      error: null,
+      success: req.flash("success")
+    });
   } else {
     req.flash("error", "Invalid OTP.");
-    res.redirect("back");
+    res.render("forgotPasswordUser/verifyOtpUser", {
+      error: req.flash("error"),
+      success: null
+    });
   }
 };
 
@@ -254,14 +259,14 @@ exports.resetUserPassword = async (req, res) => {
 
   if (newpass !== confpass) {
     req.flash("error", "Passwords do not match.");
-    return res.redirect("back");
+    return res.redirect("/user/forgot-password");
   }
 
   try {
     const user = await User.findOne({ email });
     if (!user) {
       req.flash("error", "User not found.");
-      return res.redirect("back");
+      return res.redirect("/user/forgot-password");
     }
 
     user.password = newpass;
@@ -272,18 +277,34 @@ exports.resetUserPassword = async (req, res) => {
   } catch (error) {
     console.log(error);
     req.flash("error", "Failed to reset password.");
-    res.redirect("back");
+    res.redirect("/user/forgot-password");
   }
 };
 
-// In your user.controller.js
+
+// controllers/userController.js
 exports.logoutUser = (req, res) => {
-  req.session.destroy((err) => {
+  try {
+    req.logout(function (err) {
       if (err) {
-          return res.status(500).send("Failed to log out");
+        console.error("Logout Error:", err);
+        return res.status(500).send("Failed to log out");
       }
-      res.redirect("/loginUser"); 
-  });
+
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Session destruction error:", err);
+          return res.status(500).send("Failed to destroy session");
+        }
+
+        res.clearCookie("connect.sid"); // Optional: Clears session cookie
+        res.redirect("/user/loginUser");
+      });
+    });
+  } catch (error) {
+    console.log("Logout Exception:", error);
+    res.redirect("/user/loginUser");
+  }
 };
 
 // Show product add-to-cart form
@@ -294,120 +315,98 @@ exports.showAddProductPage = async (req, res) => {
       .populate("subCategoryId")
       .populate("extraCategoryId");
 
-    res.render("cart/add", { product }); // Corrected path
+    res.render("/add", { product }); // Corrected path
   } catch (err) {
     console.log("Show Product Error:", err);
     res.redirect("/user");
   }
 };
 
-// Add to cart
+
+// Add product to session cart
 exports.addToCart = async (req, res) => {
+  const productId = req.params.id;
+
   try {
-    const { productId, quantity, productName, productPrice, productImage, discount } = req.body;
+    const product = await Product.findById(productId);
 
-    const qty = parseInt(quantity) || 1;
+    if (product) {
+      if (!req.session.cart) {
+        req.session.cart = [];
+      }
 
-    if (!req.session.cart) {
-      req.session.cart = [];
-    }
-
-    const index = req.session.cart.findIndex(item => item.productId === productId);
-
-    if (index !== -1) {
-      req.session.cart[index].quantity += qty;
-    } else {
       req.session.cart.push({
-        productId,
-        productName,
-        productPrice: parseFloat(productPrice),
-        productImage,
-        discount: parseFloat(discount),
-        quantity: qty
+        _id: product._id,
+        title: product.productName,
+        price: product.price,
+        image: product.productImage,
+        discount: product.discount
       });
-    }
 
-    res.redirect("/cart/view"); // Correct redirect
+      res.redirect('/user/cart');
+    } else {
+      res.status(404).send("Product not found");
+    }
   } catch (err) {
-    console.log("Cart Add Error:", err);
-    res.redirect("/user");
+    console.error(err);
+    res.status(500).send("Error adding to cart");
   }
 };
 
-// View cart
+// View Cart Page
 exports.viewCart = (req, res) => {
   try {
     const cart = req.session.cart || [];
-
-    const cartItems = cart.map(item => {
-      const totalPrice = (item.productPrice - item.discount) * item.quantity;
-      return { ...item, totalPrice };
-    });
-
-    const grandTotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
-
-    res.render("cart/view", { cartItems, grandTotal }); // Corrected path
-  } catch (err) {
-    console.log("Cart View Error:", err);
-    res.redirect("/user");
+    res.render('cart', { cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error loading cart');
   }
 };
 
 // Remove from cart
 exports.removeFromCart = (req, res) => {
-  try {
-    const id = req.params.id;
-    if (req.session.cart) {
-      req.session.cart = req.session.cart.filter(item => item.productId !== id);
-    }
-    res.redirect("/cart/view"); // Fixed path
-  } catch (err) {
-    console.log("Cart Remove Error:", err);
-    res.redirect("/user");
+  const idToRemove = req.params.id;
+
+  if (req.session.cart) {
+    req.session.cart = req.session.cart.filter(item => item._id.toString() !== idToRemove);
   }
+
+  res.redirect('/user/cart');
 };
 
 
-// Add to Favourites
+// Add product to session favourites
 exports.addToFavourites = async (req, res) => {
+  const productId = req.params.id;
+
   try {
-    const productId = req.params.id;
+    const product = await Product.findById(productId);
 
-    const product = await Product.findById(productId)
-      .populate("categoryId")
-      .populate("subCategoryId")
-      .populate("extraCategoryId");
+    if (product) {
+      if (!req.session.favourites) {
+        req.session.favourites = [];
+      }
 
-    if (!product) {
-      req.flash("error", "Product not found.");
-      return res.redirect("back");
+      // Prevent duplicates
+      const exists = req.session.favourites.find(item => item._id.toString() === productId);
+      if (!exists) {
+        req.session.favourites.push({
+          _id: product._id,
+          title: product.productName,
+          price: product.price,
+          image: product.productImage,
+          discount: product.discount
+        });
+      }
+
+      res.redirect('/user/favourite');
+    } else {
+      res.status(404).send("Product not found");
     }
-
-    if (!req.session.favourites) {
-      req.session.favourites = [];
-    }
-
-    const alreadyExists = req.session.favourites.some(item => item._id === productId);
-
-    if (!alreadyExists) {
-      req.session.favourites.push({
-        _id: product._id,
-        productName: product.productName,
-        productPrice: product.productPrice,
-        discount: product.discount,
-        productImage: product.productImage,
-        category: product.categoryId?.categoryName || '',
-        subCategory: product.subCategoryId?.subCategoryName || '',
-        extraCategory: product.extraCategoryId?.extraCategoryName || ''
-      });
-    }
-
-    req.flash("success", "Product added to favourites.");
-    res.redirect("/user/favourite/view");
-  } catch (error) {
-    console.log("Add to Favourites Error:", error);
-    req.flash("error", "Something went wrong.");
-    res.redirect("back");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error adding to favourites");
   }
 };
 
@@ -415,28 +414,21 @@ exports.addToFavourites = async (req, res) => {
 exports.viewFavourites = (req, res) => {
   try {
     const favourites = req.session.favourites || [];
-    res.render("favourite", { favourites });
+    res.render('favourite', { favourites });
   } catch (error) {
-    console.log("View Favourites Error:", error);
-    req.flash("error", "Something went wrong.");
-    res.redirect("/user");
+    console.error(error);
+    res.status(500).send('Error loading favourites');
   }
 };
 
-// Remove from Favourites
+// Remove from favourites
 exports.removeFromFavourites = (req, res) => {
-  try {
-    const productId = req.params.id;
-    if (req.session.favourites) {
-      req.session.favourites = req.session.favourites.filter(item => item._id !== productId);
-    }
-    req.flash("success", "Removed from favourites.");
-    res.redirect("/user/favourite/view");
-  } catch (error) {
-    console.log("Remove Favourites Error:", error);
-    req.flash("error", "Something went wrong.");
-    res.redirect("/user");
-  }
-};
+  const idToRemove = req.params.id;
 
+  if (req.session.favourites) {
+    req.session.favourites = req.session.favourites.filter(item => item._id.toString() !== idToRemove);
+  }
+
+  res.redirect('/user/favourite');
+};
 
