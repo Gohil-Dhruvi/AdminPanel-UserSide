@@ -17,12 +17,11 @@ exports.AddNewAdmin = async (req, res) => {
   try {
       let imagePath = "";
       if (req.file) {
-          // Check if the image type is specified (e.g., 'product', 'category', etc.)
-          const folder = getUploadFolder(req.body.imageType);  // Assuming you pass an 'imageType' field in the form
-          imagePath = `/uploads/${folder}/${req.file.filename}`;  // Store the image in the appropriate folder
-          req.body.image = imagePath;  // Add image path to request body
+          const folder = getUploadFolder(req.body.imageType); 
+          imagePath = `/uploads/${folder}/${req.file.filename}`;  
+          req.body.image = imagePath;  
       }
-      await Admin.create(req.body);  // Save the new admin to the database
+      await Admin.create(req.body);  
       req.flash("success", 'New Admin Added Successfully');
       return res.redirect("/admin/views-admin");  
   } catch (error) {
@@ -34,8 +33,8 @@ exports.AddNewAdmin = async (req, res) => {
 // View All Admins (fetches all admins from the database and displays them)
 exports.ViewAdminsPage = async (req, res) => {
   try {
-      let admins = await Admin.find();  // Fetch all admins from the database
-      res.render("views-admin", { admins });  // Render the admin list page with admins data
+      let admins = await Admin.find();  
+      res.render("views-admin", { admins });  
   } catch (error) {
       console.log(error);
       return res.redirect("back");
@@ -45,11 +44,11 @@ exports.ViewAdminsPage = async (req, res) => {
 // Edit Admin Page (fetches admin details to show in the edit form)
 exports.EditAdminPage = async (req, res) => {
   try {
-      let admin = await Admin.findById(req.params.id);  // Fetch admin by ID
+      let admin = await Admin.findById(req.params.id);  
       if (admin) {
-          return res.render("edit-admin", { admin });  // Render the edit page with admin data
+          return res.render("edit-admin", { admin });  
       }
-      return res.redirect("/admin/views-admin");  // If admin not found, redirect to the list page
+      return res.redirect("/admin/views-admin");  
   } catch (error) {
       console.log(error);
       return res.redirect("back");
@@ -59,36 +58,33 @@ exports.EditAdminPage = async (req, res) => {
 // Update Admin (handles the form submission to update an admin's details)
 exports.UpdateAdmin = async (req, res) => {
   try {
-      let admin = await Admin.findById(req.params.id);  // Fetch the admin to update
+      let admin = await Admin.findById(req.params.id);  
       if (admin) {
-          // Handle image update
           if (req.file) {
-              // Delete the old image if it exists
               if (admin.image) {
                   let imagePath = path.join(__dirname, "..", "uploads", admin.image);
                   if (fs.existsSync(imagePath)) {
                       try {
-                          fs.unlinkSync(imagePath);  // Delete old image
+                          fs.unlinkSync(imagePath);  
                       } catch (error) {
                           console.log("Error deleting old image:", error);
                       }
                   }
               }
 
-              // Determine the folder based on imageType or any other logic
-              const folder = getUploadFolder(req.body.imageType);  // Assuming 'imageType' is part of the form
+              const folder = getUploadFolder(req.body.imageType);  
               let newImagePath = `/uploads/${folder}/${req.file.filename}`;
-              req.body.image = newImagePath;  // Add new image path to request body
+              req.body.image = newImagePath; 
           }
 
           // Update the admin details in the database
           let updatedAdmin = await Admin.findByIdAndUpdate(admin._id, req.body, { new: true });
           if (updatedAdmin) {
               req.flash("success", "Admin updated successfully");
-              return res.redirect("/admin/views-admin");  // Redirect to the admin list page
+              return res.redirect("/admin/views-admin");  
           }
       }
-      return res.redirect("back");  // If admin not found, redirect back
+      return res.redirect("back");  
   } catch (error) {
       console.log(error);
       return res.redirect("back");
@@ -98,15 +94,14 @@ exports.UpdateAdmin = async (req, res) => {
 // Delete Admin (deletes an admin and their image)
 exports.DeleteAdminPage = async (req, res) => {
   try {
-      let admin = await Admin.findById(req.params.id);  // Fetch the admin to delete
-      if (!admin) return res.redirect("/admin/views-admin");  // If admin not found, redirect to the list page
+      let admin = await Admin.findById(req.params.id);  
+      if (!admin) return res.redirect("/admin/views-admin"); 
 
-      // Delete the image file if it exists
       if (admin.image) {
           let imagePath = path.join(__dirname, "..", "uploads", admin.image);
           if (fs.existsSync(imagePath)) {
               try {
-                  fs.unlinkSync(imagePath);  // Delete the image
+                  fs.unlinkSync(imagePath);  
               } catch (error) {
                   console.log("Error deleting image:", error);
               }

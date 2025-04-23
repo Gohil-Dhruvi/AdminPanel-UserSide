@@ -144,23 +144,40 @@ exports.handleLogin = (req, res, next) => {
 
 exports.viewProfile = async (req, res) => {
   try {
-    if (!req.user) return res.redirect('/loginUser');
+    if (!req.user) {
+      req.flash('error', 'Please login to view your profile');
+      return res.redirect('/loginUser');
+    }
 
-    const user = await User.findById(req.user._id);
-    if (!user) return res.redirect('/loginUser');
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) {
+      req.flash('error', 'User not found');
+      return res.redirect('/loginUser');
+    }
 
-    return res.render('/view-profile', { user });
+    const success = req.flash('success');
+    const error = req.flash('error');
+
+    return res.render('view-profile', { 
+      user,
+      success: success.length > 0 ? success[0] : null,
+      error: error.length > 0 ? error[0] : null
+    });
 
   } catch (error) {
     console.error('Error in viewProfile:', error);
+    req.flash('error', 'An error occurred while loading your profile');
     res.redirect('/loginUser');
   }
 };
 
 exports.changeUserPasswordPage = (req, res) => {
-  res.render('/changePasswordUser', {
-    success: req.flash('success'),
-    error: req.flash('error'),
+  const success = req.flash('success');
+  const error = req.flash('error');
+  
+  res.render('change-password', {
+    success: success.length > 0 ? success[0] : null,
+    error: error.length > 0 ? error[0] : null,
   });
 };
 
@@ -171,36 +188,38 @@ exports.changeUserPassword = async (req, res) => {
 
     if (!user) {
       req.flash('error', 'User not found.');
-      return res.redirect('back');
+      return res.redirect('/user/change-password');
     }
 
+    // Compare passwords (assuming you're using plain text passwords - not recommended)
+    // In a real app, you should use bcrypt.compare()
     if (currentPass !== user.password) {
       req.flash('error', 'Current password is incorrect.');
-      return res.redirect('back');
+      return res.redirect('/user/change-password');
     }
 
     if (newpass !== confpass) {
-      req.flash('error', 'Passwords do not match.');
-      return res.redirect('back');
+      req.flash('error', 'New passwords do not match.');
+      return res.redirect('/user/change-password');
     }
 
     if (currentPass === newpass) {
-      req.flash('error', 'New password must be different.');
-      return res.redirect('back');
+      req.flash('error', 'New password must be different from current password.');
+      return res.redirect('/user/change-password');
     }
 
+    // Update password (in a real app, you should hash the password here)
     user.password = newpass;
     await user.save();
 
     req.flash('success', 'Password changed successfully.');
-    res.redirect('/view-profile');
+    res.redirect('/user/view-profile');
   } catch (error) {
     console.error('Change password error:', error);
-    req.flash('error', 'Something went wrong.');
-    res.redirect('back');
+    req.flash('error', 'Something went wrong while changing your password.');
+    res.redirect('/user/change-password');
   }
 };
-
 
 exports.forgotUserPasswordPage = (req, res) => {
   res.render("forgotPasswordUser/forgotPasswordUser", {

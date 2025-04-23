@@ -1,26 +1,26 @@
 
 const express = require("express");
-const { 
-    userPage, 
-    singleProduct, 
-    viewProfile, 
-    registerPage, 
-    handleRegister, 
-    loginPage, 
-    handleLogin, 
+const {
+    userPage,
+    singleProduct,
+    viewProfile,
+    registerPage,
+    handleRegister,
+    loginPage,
+    handleLogin,
     logoutUser,
-    forgotUserPasswordPage, 
-    sendUserResetEmail, 
-    UserverifyOTP, 
-    resetUserPassword, 
-    changeUserPasswordPage, 
+    forgotUserPasswordPage,
+    sendUserResetEmail,
+    UserverifyOTP,
+    resetUserPassword,
+    changeUserPasswordPage,
     changeUserPassword,
     addToCart,
     viewCart,
     // addToCart,
     // showAddProductPage, 
     // viewCart, 
-    removeFromCart,   
+    removeFromCart,
     addToFavourites,
     viewFavourites,
     removeFromFavourites
@@ -41,22 +41,16 @@ routes.post("/loginUser", handleLogin);
 // routes/user.js
 routes.get("/logoutUser", logoutUser);
 
-routes.get("/forgot-password",forgotUserPasswordPage);
-routes.post("/sendUserResetEmail",sendUserResetEmail);
-routes.post("/verifyUserotp",UserverifyOTP);
-routes.post("/resetUserPassword",resetUserPassword);
-
-// Cart
-// routes.get("/add/:id", showAddProductPage); 
-// routes.post("/add", addToCart);           
-// routes.get("/view", viewCart);              
-// routes.get("/remove/:id", removeFromCart);
+routes.get("/forgot-password", forgotUserPasswordPage);
+routes.post("/sendUserResetEmail", sendUserResetEmail);
+routes.post("/verifyUserotp", UserverifyOTP);
+routes.post("/resetUserPassword", resetUserPassword);
 
 // Add to cart by product ID
 routes.get("/add-cart/:id", addToCart);
 // View cart page
 routes.get("/cart", viewCart);
-routes.get("/cart/remove/:id",removeFromCart);
+routes.get("/cart/remove/:id", removeFromCart);
 
 
 // Add to favourite
@@ -73,10 +67,18 @@ routes.get("/favourite/view", viewFavourites);
 routes.get("/favourite/remove/:id", removeFromFavourites);
 
 // User profile routes
-routes.get('/view-profile', passport.checkUserAuthenticated,viewProfile);
+routes.get('/view-profile',
+    passport.checkUserAuthenticated, viewProfile
+);
 
 // Change password routes
-routes.get('/change-password', passport.checkUserAuthenticated,changeUserPasswordPage);
-routes.post('/change-password', passport.checkUserAuthenticated,changeUserPassword);
+routes.get('/change-password',
+    passport.checkUserAuthenticated, changeUserPasswordPage
+);
+
+routes.post('/change-password',
+    passport.checkUserAuthenticated, changeUserPassword
+);
+
 
 module.exports = routes;
