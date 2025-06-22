@@ -1,4 +1,3 @@
-
 const express = require("express");
 const {
     userPage,
@@ -66,12 +65,12 @@ routes.get("/favourite/add/:id", addToFavourites);
 routes.get("/favourite/view", viewFavourites);
 routes.get("/favourite/remove/:id", removeFromFavourites);
 
-// User profile routes
+// User profile 
 routes.get('/view-profile',
     passport.checkUserAuthenticated, viewProfile
 );
 
-// Change password routes
+// Change password 
 routes.get('/change-password',
     passport.checkUserAuthenticated, changeUserPasswordPage
 );

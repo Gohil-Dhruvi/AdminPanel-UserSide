@@ -8,11 +8,12 @@ exports.logout = async (req, res) => {
             console.log(err);
             return false;
         }
+        req.flash("success", "Logout Success");
         return res.redirect("/");
     });
 };
 
-// Login Page
+// Login 
 exports.loginPage = async (req, res) => {
     if (req.isAuthenticated()) {
         req.flash("success", "Login Success");

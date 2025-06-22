@@ -7,8 +7,8 @@ exports.viewSubCategory = async (req, res) => {
   try {
     const subCategories = await SubCategory.find().populate("category");
     return res.render("subCategory/view-subCategory", { subCategories });
-  } catch (error) {
-    console.log("View SubCategory Error ===>", error);
+  } catch (err) {
+    console.log("View SubCategory Error ===>", err);
     req.flash("error", "Something went wrong!");
     return res.redirect("back");
   }

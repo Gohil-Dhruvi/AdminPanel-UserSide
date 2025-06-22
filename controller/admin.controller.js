@@ -2,7 +2,7 @@ const Admin = require("../model/admin.model");
 const path = require('path');
 const fs = require('fs');
 
-// Add Admin Page (renders the page to add a new admin)
+// Add Admin (renders the page to add a new admin)
 exports.AddAdminPage = async (req, res) => {
   try {
       res.render('add-admin'); 

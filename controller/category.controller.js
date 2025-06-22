@@ -123,8 +123,8 @@ exports.deleteCategory = async (req, res) => {
         req.flash("success", "Category deleted successfully!");
         return res.redirect("/category/view-category");
 
-    } catch (error) {
-        console.log("Delete Category Error ===>", error);
+    } catch (err) {
+        console.log("Delete Category Error ===>", err);
         req.flash("error", "Something went wrong!");
         return res.redirect("/category/view-category");
     }

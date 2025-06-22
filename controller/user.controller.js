@@ -68,8 +68,8 @@ exports.singleProduct = async (req, res) => {
     }
 
     return res.render("get_product", { product });
-  } catch (error) {
-    console.error("Error in singleProduct:", error);
+  } catch (err) {
+    console.error("Error in singleProduct:", err);
     req.flash("error", "Something went wrong!");
     return res.redirect("back");
   }

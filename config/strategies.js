@@ -6,8 +6,8 @@ const User = require("../model/user.model");
 // Local strategy for login
 passport.use(new LocalStrategy(
     {
-        usernameField: 'email',  // Or 'username' depending on your form field
-        passwordField: 'password', // The name of the password field in the form
+        usernameField: 'email',  
+        passwordField: 'password', 
     },
     async (email, password, done) => {
         try {

@@ -151,8 +151,8 @@ exports.deleteExtraCategory = async (req, res) => {
 
     req.flash("success", "Extra Category deleted successfully!");
     return res.redirect("/extraCategory/view-extraCategory");
-  } catch (error) {
-    console.log("Delete ExtraCategory Error ===>", error);
+  } catch (err) {
+    console.log("Delete ExtraCategory Error ===>", err);
     req.flash("error", "Something went wrong!");
     return res.redirect("back");
   }

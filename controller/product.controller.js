@@ -50,8 +50,8 @@ exports.viewProduct = async (req, res) => {
       totalPages,
       currentPage: parseInt(page)
     });
-  } catch (error) {
-    console.log("Error fetching products:", error);
+  } catch (err) {
+    console.log("Error fetching products:", err);
     req.flash("error", "Something went wrong!");
     res.redirect("back");
   }

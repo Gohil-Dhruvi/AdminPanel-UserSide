@@ -8,6 +8,6 @@ router.post('/add-admin', Admin.uploadImage, AddNewAdmin);
 router.get('/views-admin',ViewAdminsPage);
 router.get('/edit-admin/:id',EditAdminPage);
 router.post("/update-admin/:id", Admin.uploadImage, UpdateAdmin);
-router.get('/delete-admin/:id',DeleteAdminPage)
+router.get('/delete-admin/:id',DeleteAdminPage);
 
 module.exports = router;    
